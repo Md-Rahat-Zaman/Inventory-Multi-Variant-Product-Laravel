@@ -8,21 +8,30 @@ use App\Models\Brand;
 use App\Models\Unit;
 use App\Models\Color;
 use App\Models\Size;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the products.
      */
-    public function index()
-    {
-        $products = Product::with(['category', 'brand', 'unit'])
-            ->latest()
-            ->paginate(15);
+public function index()
+{
+    $products = Product::with([
+        'category',
+        // 'brand',
+        'unit',
+        'variants.color',
+        'variants.size',
+    ])
+        ->latest()
+        ->paginate(15);
 
-        return view('products.product-list', compact('products'));
-    }
+    return view('products.product-list', compact('products'));
+}
 
     /**
      * Show the form for creating a new product.
@@ -35,7 +44,8 @@ class ProductController extends Controller
 
         // আপাতত empty
         $brands = [];
-        $units = [];
+        $units = Unit::orderBy('name')
+            ->get();
 
         // Colors
         $colors = Color::where('status', 1)
@@ -60,37 +70,117 @@ class ProductController extends Controller
      * Store a newly created product.
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name'           => 'required|string|max:150',
-            'sku'            => 'required|string|max:100|unique:products,sku',
-            'barcode'        => 'nullable|string|max:100|unique:products,barcode',
+{
+    $validated = $request->validate([
+        'name'           => 'required|string|max:150',
+        'category_id'    => 'required|exists:categories,id',
+        'brand_id'       => 'nullable|exists:brands,id',
+        'unit_id'        => 'required|exists:units,id',
 
-            'category_id'    => 'required|exists:categories,id',
-            'brand_id'       => 'nullable|exists:brands,id',
-            'unit_id'        => 'required|exists:units,id',
+        'purchase_price' => 'required|numeric|min:0',
+        'sale_price'     => 'required|numeric|min:0',
+        'tax_rate'       => 'nullable|numeric|min:0|max:999.99',
 
-            'purchase_price' => 'required|numeric|min:0',
-            'sale_price'     => 'required|numeric|min:0',
-            'tax_rate'       => 'nullable|numeric|min:0|max:999.99',
+        'status'         => 'required|boolean',
+        'note'           => 'nullable|string',
+        'description'    => 'nullable|string',
 
-            'opening_stock'  => 'required|numeric|min:0',
-            'minimum_stock'  => 'nullable|numeric|min:0',
+        'colors'         => 'required|array|min:1',
+        'colors.*'       => 'required|integer|distinct|exists:colors,id',
 
-            'status'         => 'required|boolean',
+        'sizes'          => 'required|array|min:1',
+        'sizes.*'        => 'required|integer|distinct|exists:sizes,id',
 
-            'note'           => 'nullable|string',
-            'description'    => 'nullable|string',
+        'variants'                   => 'required|array|min:1',
+        'variants.*.color_id'        => 'required|integer|exists:colors,id',
+        'variants.*.size_id'         => 'required|integer|exists:sizes,id',
+        'variants.*.sku'             => 'nullable|string|max:100|distinct|unique:product_variants,sku',
+        'variants.*.barcode'         => 'nullable|string|max:100|distinct|unique:product_variants,barcode',
+        'variants.*.purchase_price'  => 'required|numeric|min:0',
+        'variants.*.sale_price'      => 'required|numeric|min:0',
+        'variants.*.opening_stock'   => 'required|numeric|min:0',
+    ]);
+
+    $variantColors = collect($validated['variants'])
+        ->pluck('color_id')
+        ->unique()
+        ->sort()
+        ->values();
+
+    $variantSizes = collect($validated['variants'])
+        ->pluck('size_id')
+        ->unique()
+        ->sort()
+        ->values();
+
+    if (
+        $variantColors->diff(collect($validated['colors']))->isNotEmpty() ||
+        $variantSizes->diff(collect($validated['sizes']))->isNotEmpty()
+    ) {
+        return back()
+            ->withInput()
+            ->withErrors([
+                'variants' => 'Generated variants do not match the selected colors and sizes.',
+            ]);
+    }
+
+    // Prevent duplicate color-size combinations.
+    $combinations = collect($validated['variants'])->map(
+        fn ($variant) => $variant['color_id'] . '-' . $variant['size_id']
+    );
+
+    if ($combinations->unique()->count() !== $combinations->count()) {
+        return back()
+            ->withInput()
+            ->withErrors([
+                'variants' => 'Duplicate color and size combinations are not allowed.',
+            ]);
+    }
+
+    DB::transaction(function () use ($validated) {
+
+        $totalStock = collect($validated['variants'])
+            ->sum('opening_stock');
+
+        $product = Product::create([
+            'name'           => $validated['name'],
+            'sku'            => 'PRD-' . strtoupper(Str::random(12)),
+            'barcode'        => null,
+            'category_id'    => $validated['category_id'],
+            'brand_id'       => $validated['brand_id'] ?? null,
+            'unit_id'        => $validated['unit_id'],
+            'purchase_price' => $validated['purchase_price'],
+            'sale_price'     => $validated['sale_price'],
+            'tax_rate'       => $validated['tax_rate'] ?? 0,
+            'opening_stock'  => $totalStock,
+            'stock'          => $totalStock,
+            'minimum_stock'  => 0,
+            'status'         => $validated['status'],
+            'note'           => $validated['note'] ?? null,
+            'description'    => $validated['description'] ?? null,
         ]);
 
-        $validated['stock'] = $validated['opening_stock'];
+        foreach ($validated['variants'] as $variant) {
 
-        Product::create($validated);
+            ProductVariant::create([
+                'product_id'     => $product->id,
+                'color_id'       => $variant['color_id'],
+                'size_id'        => $variant['size_id'],
+                'sku'            => $variant['sku'] ?: (
+                    'VAR-' . strtoupper(Str::random(12))
+                ),
+                'barcode'        => $variant['barcode'] ?: null,
+                'purchase_price' => $variant['purchase_price'],
+                'sale_price'     => $variant['sale_price'],
+                'stock'          => $variant['opening_stock'],
+            ]);
+        }
+    });
 
-        return redirect()
-            ->route('products.index')
-            ->with('success', 'Product created successfully.');
-    }
+    return redirect()
+        ->route('products.index')
+        ->with('success', 'Product and variants created successfully.');
+}
 
     /**
      * Display the specified product.

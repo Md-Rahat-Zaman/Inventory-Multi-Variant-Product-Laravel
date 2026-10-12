@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     
 
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('units', UnitController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('/quick-create', [QuickCreateController::class, 'store'])->name('quick-create.store');
 });
 

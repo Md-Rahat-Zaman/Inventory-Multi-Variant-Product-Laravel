@@ -3,7 +3,132 @@
 @section('title', 'Products')
 
 @section('content')
+<style>
+/* Product information */
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 190px;
+}
 
+.product-info-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #edf5f1;
+    color: #006044;
+    font-size: 20px;
+}
+
+.product-category {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.variant-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: #edf5f1;
+    color: #006044;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.product-price {
+    font-weight: 600;
+    white-space: nowrap;
+    color: #1e293b;
+}
+
+.product-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.variant-details-box {
+    margin: 0;
+    padding: 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.variant-details-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.variant-details-heading h6 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.variant-inner-table {
+    min-width: 720px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+}
+
+.variant-inner-table thead th {
+    padding: 12px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.variant-inner-table tbody td {
+    padding: 12px;
+    color: #334155;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.variant-color-name {
+    font-weight: 600;
+}
+
+.variant-size {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.variant-inner-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .variant-details-box {
+        padding: 12px;
+    }
+
+    .product-info {
+        min-width: 170px;
+    }
+}
+</style>
 <div class="module-page">
 
     <div class="container">
@@ -475,210 +600,205 @@
             {{-- =====================================================
                  Product Table
             ====================================================== --}}
+            
+            {{-- Product Table --}}
             <div class="module-table-wrapper">
-
-                <table class="module-table">
+                <table class="module-table product-table">
 
                     <thead>
                         <tr>
-
-                            <th width="40">#</th>
-
-                            <th>Product</th>
-
-                            <th>SKU</th>
-
+                            <th width="50">#</th>
+                            <th>Product Information</th>
                             <th>Category</th>
-
-                            <th>Sale Price</th>
-
-                            <th>Stock</th>
-
+                            <th>Variants</th>
+                            <th>Price Range</th>
+                            <th>Total Stock</th>
                             <th>Status</th>
-
                             <th class="text-end">Action</th>
-
                         </tr>
                     </thead>
 
-
                     <tbody>
-
                         @forelse($products as $key => $product)
 
                             <tr>
-
-                                {{-- Serial --}}
                                 <td class="module-serial">
                                     {{ $products->firstItem() + $key }}
                                 </td>
 
-
-                                {{-- Product --}}
                                 <td>
-                                    <span class="module-name">
-                                        {{ $product->name }}
-                                    </span>
-                                </td>
-
-
-                                {{-- SKU --}}
-                                <td>
-                                    <span class="module-secondary">
-                                        {{ $product->sku ?? '-' }}
-                                    </span>
-                                </td>
-
-
-                                {{-- Category --}}
-                                <td>
-                                    <span class="module-secondary">
-                                        {{ $product->category->name ?? '-' }}
-                                    </span>
-                                </td>
-
-
-                                {{-- Sale Price --}}
-                                <td>
-                                    {{ number_format($product->sale_price, 2) }}
-                                </td>
-
-
-                                {{-- Stock --}}
-                                <td>
-
-                                    @if($product->stock <= 0)
-
-                                        <span class="module-stock out">
-                                            Out of Stock
-                                        </span>
-
-                                    @elseif($product->stock <= $product->minimum_stock)
-
-                                        <span class="module-stock low">
-                                            {{ $product->stock }}
-                                        </span>
-
-                                    @else
-
-                                        <span class="module-stock">
-                                            {{ $product->stock }}
-                                        </span>
-
-                                    @endif
-
-                                </td>
-
-
-                                {{-- Status --}}
-                                <td>
-
-                                    @if($product->status)
-
-                                        <span class="module-badge module-badge-success">
-                                            Active
-                                        </span>
-
-                                    @else
-
-                                        <span class="module-badge module-badge-danger">
-                                            Inactive
-                                        </span>
-
-                                    @endif
-
-                                </td>
-
-
-                                {{-- Action --}}
-                                <td>
-
-                                    <div class="module-action">
-
-                                        <div class="dropdown">
-
-                                            <button
-                                                class="btn btn-light module-action-btn dropdown-toggle"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                            >
-                                                <i class="bi bi-three-dots"></i>
-                                                Action
-                                            </button>
-
-
-                                            <ul class="dropdown-menu dropdown-menu-end module-action-menu">
-
-                                                {{-- View --}}
-                                                <li>
-                                                    <a
-                                                        href="{{ route('products.show', $product->id) }}"
-                                                        class="dropdown-item"
-                                                    >
-                                                        <i class="bi bi-eye"></i>
-                                                        View
-                                                    </a>
-                                                </li>
-
-
-                                                {{-- Edit --}}
-                                                <li>
-                                                    <a
-                                                        href="{{ route('products.edit', $product->id) }}"
-                                                        class="dropdown-item"
-                                                    >
-                                                        <i class="bi bi-pencil"></i>
-                                                        Edit
-                                                    </a>
-                                                </li>
-
-
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-
-
-                                                {{-- Delete --}}
-                                                <li>
-
-                                                    <form
-                                                        action="{{ route('products.destroy', $product->id) }}"
-                                                        method="POST"
-                                                    >
-
-                                                        @csrf
-                                                        @method('DELETE')
-
-                                                        <button
-                                                            type="submit"
-                                                            class="dropdown-item delete-item"
-                                                        >
-                                                            <i class="bi bi-trash"></i>
-                                                            Delete
-                                                        </button>
-
-                                                    </form>
-
-                                                </li>
-
-                                            </ul>
-
+                                    <div class="product-info">
+                                        <div class="product-info-icon">
+                                            <i class="bi bi-box-seam"></i>
                                         </div>
 
-                                    </div>
+                                        <div>
+                                            <div class="module-name">
+                                                {{ $product->name }}
+                                            </div>
 
+                                            <div class="module-secondary small">
+                                                SKU: {{ $product->sku ?? '-' }}
+                                            </div>
+
+                                            <div class="module-secondary small">
+                                                Unit: {{ $product->unit->name ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
 
+                                <td>
+                                    <span class="product-category">
+                                        {{ $product->category->name ?? '-' }}
+                                    </span>
+
+                                    @if($product->brand)
+                                        <div class="module-secondary small mt-1">
+                                            {{ $product->brand->name }}
+                                        </div>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    <span class="variant-count">
+                                        <i class="bi bi-layers"></i>
+                                        {{ $product->variants->count() }}
+                                    </span>
+
+                                    @if($product->variants->count())
+                                        <div class="module-secondary small mt-1">
+                                            Color / Size combinations
+                                        </div>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    @if($product->variants->isNotEmpty())
+                                        <div class="product-price">
+                                            {{ number_format($product->variants->min('sale_price'), 2) }}
+                                            @if($product->variants->min('sale_price') != $product->variants->max('sale_price'))
+                                                <span class="module-secondary">–</span>
+                                                {{ number_format($product->variants->max('sale_price'), 2) }}
+                                            @endif
+                                        </div>
+                                    @else
+                                        <div class="product-price">
+                                            {{ number_format($product->sale_price, 2) }}
+                                        </div>
+                                    @endif
+
+                                    <div class="module-secondary small">Sale price</div>
+                                </td>
+
+                                <td>
+                                    @php
+                                        $totalStock = $product->variants->isNotEmpty()
+                                            ? $product->variants->sum('stock')
+                                            : $product->stock;
+                                    @endphp
+
+                                    @if($totalStock <= 0)
+                                        <span class="module-stock out">
+                                            <i class="bi bi-exclamation-circle"></i>
+                                            Out of stock
+                                        </span>
+                                    @elseif($totalStock <= ($product->minimum_stock ?? 0))
+                                        <span class="module-stock low">
+                                            {{ number_format($totalStock, 2) }}
+                                        </span>
+                                    @else
+                                        <span class="module-stock">
+                                            {{ number_format($totalStock, 2) }}
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    @if($product->status)
+                                        <span class="module-badge module-badge-success">
+                                            <i class="bi bi-check-circle"></i>
+                                            Active
+                                        </span>
+                                    @else
+                                        <span class="module-badge module-badge-danger">
+                                            <i class="bi bi-x-circle"></i>
+                                            Inactive
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="text-end">
+                                    <div class="dropdown">
+                                        <button
+                                            class="btn btn-light module-action-btn dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                        >
+                                            <i class="bi bi-three-dots"></i>
+                                            Action
+                                        </button>
+
+                                        <ul class="dropdown-menu dropdown-menu-end module-action-menu">
+                                           
+                                            <li>
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#variantsModal{{ $product->id }}"
+                                                >
+                                                    <i class="bi bi-layers"></i>
+                                                    View Variants
+                                                </button>
+                                            </li>
+
+                                            <li>
+                                                <a
+                                                    href="{{ route('products.show', $product->id) }}"
+                                                    class="dropdown-item"
+                                                >
+                                                    <i class="bi bi-eye"></i>
+                                                    View Product
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a
+                                                    href="{{ route('products.edit', $product->id) }}"
+                                                    class="dropdown-item"
+                                                >
+                                                    <i class="bi bi-pencil"></i>
+                                                    Edit
+                                                </a>
+                                            </li>
+
+                                            <li><hr class="dropdown-divider"></li>
+
+                                            <li>
+                                                <form
+                                                    action="{{ route('products.destroy', $product->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this product?')"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="submit" class="dropdown-item delete-item">
+                                                        <i class="bi bi-trash"></i>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
 
                         @empty
-
                             <tr>
-
                                 <td colspan="8">
-
                                     <div class="module-empty">
-
                                         <div class="module-empty-icon">
                                             <i class="bi bi-box-seam"></i>
                                         </div>
@@ -688,30 +808,189 @@
                                         </div>
 
                                         <p class="module-empty-text">
-                                            No products are available right now.
+                                            Start by adding your first product.
                                         </p>
-                                            <a href="{{ route('products.create') }}"
+
+                                        <a href="{{ route('products.create') }}"
                                         class="btn btn-primary module-btn">
-
                                             <i class="bi bi-plus-lg"></i>
-
                                             Add Product
-
-                                        </a>    
+                                        </a>
                                     </div>
-                                        
-
                                 </td>
-
                             </tr>
-
                         @endforelse
-
                     </tbody>
 
                 </table>
-
             </div>
+{{-- Variant Modals --}}
+                            @foreach($products as $product)
+                                <div
+                                    class="modal fade"
+                                    id="variantsModal{{ $product->id }}"
+                                    tabindex="-1"
+                                    aria-labelledby="variantsModalLabel{{ $product->id }}"
+                                    aria-hidden="true"
+                                >
+                                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content border-0 shadow">
+
+                                            <div class="modal-header text-white" style="background: #006044;">
+                                                <div>
+                                                    <h5
+                                                        class="modal-title fw-bold"
+                                                        id="variantsModalLabel{{ $product->id }}"
+                                                    >
+                                                        <i class="bi bi-layers me-2"></i>
+                                                        {{ $product->name }} — Variants
+                                                    </h5>
+
+                                                    <small>
+                                                        {{ $product->variants->count() }} variants available
+                                                    </small>
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"
+                                                ></button>
+                                            </div>
+
+                                            <div class="modal-body p-3 p-md-4">
+
+                                                <div class="row g-3 mb-4">
+
+                                                    <div class="col-md-4">
+                                                        <div class="border rounded-3 p-3 h-100">
+                                                            <div class="text-muted small mb-1">Product</div>
+                                                            <div class="fw-semibold">
+                                                                {{ $product->name }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <div class="border rounded-3 p-3 h-100">
+                                                            <div class="text-muted small mb-1">Total Variants</div>
+                                                            <div class="fw-bold fs-5" style="color: #006044;">
+                                                                {{ $product->variants->count() }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        @php
+                                                            $variantStock = $product->variants->sum('stock');
+                                                        @endphp
+
+                                                        <div class="border rounded-3 p-3 h-100">
+                                                            <div class="text-muted small mb-1">Total Variant Stock</div>
+                                                            <div class="fw-bold fs-5">
+                                                                {{ number_format($variantStock, 2) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                @if($product->variants->isNotEmpty())
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover align-middle mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Color</th>
+                                                                    <th>Size</th>
+                                                                    <th>SKU</th>
+                                                                    <th>Barcode</th>
+                                                                    <th class="text-end">Purchase Price</th>
+                                                                    <th class="text-end">Sale Price</th>
+                                                                    <th class="text-end">Stock</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                @foreach($product->variants as $variantKey => $variant)
+                                                                    <tr>
+                                                                        <td>{{ $variantKey + 1 }}</td>
+
+                                                                        <td>
+                                                                            <span class="fw-semibold">
+                                                                                {{ $variant->color->name ?? '-' }}
+                                                                            </span>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <span class="badge bg-light text-dark border">
+                                                                                {{ $variant->size->name ?? '-' }}
+                                                                            </span>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <span class="text-muted">
+                                                                                {{ $variant->sku ?? '-' }}
+                                                                            </span>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            {{ $variant->barcode ?? '-' }}
+                                                                        </td>
+
+                                                                        <td class="text-end">
+                                                                            {{ number_format($variant->purchase_price, 2) }}
+                                                                        </td>
+
+                                                                        <td class="text-end fw-semibold">
+                                                                            {{ number_format($variant->sale_price, 2) }}
+                                                                        </td>
+
+                                                                        <td class="text-end">
+                                                                            @if($variant->stock <= 0)
+                                                                                <span class="badge bg-danger">
+                                                                                    Out of stock
+                                                                                </span>
+                                                                            @else
+                                                                                <span class="badge bg-success">
+                                                                                    {{ number_format($variant->stock, 2) }}
+                                                                                </span>
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                @else
+                                                    <div class="text-center py-5">
+                                                        <i class="bi bi-layers fs-1 text-muted"></i>
+                                                        <h6 class="mt-3">No Variants Found</h6>
+                                                        <p class="text-muted mb-0">
+                                                            This product has no variants yet.
+                                                        </p>
+                                                    </div>
+                                                @endif
+
+                                            </div>
+
+                                            <div class="modal-footer bg-light">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-secondary"
+                                                    data-bs-dismiss="modal"
+                                                >
+                                                    <i class="bi bi-x-lg me-1"></i>
+                                                    Close
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+
 
 
             {{-- =====================================================

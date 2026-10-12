@@ -47,7 +47,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('units.index') }}" class="nav-link">
                         <i class="bi bi-rulers me-2"></i>
                         Units
                     </a>

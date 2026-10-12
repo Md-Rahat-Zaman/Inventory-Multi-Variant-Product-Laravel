@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Unit;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Str;
 class UnitController extends Controller
 {
     /**
@@ -12,7 +12,9 @@ class UnitController extends Controller
      */
     public function index()
     {
-        //
+        $units = Unit::latest()->paginate(10);
+
+        return view('units.index', compact('units'));
     }
 
     /**
@@ -29,6 +31,29 @@ class UnitController extends Controller
     public function store(Request $request)
     {
         //
+        $unit = Unit::create([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            // 'status' => $request->status,
+        ]);
+
+            // AJAX request হলে JSON response
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Unit created successfully.',
+            'unit' => [
+                'id' => $unit->id,
+                'name' => $unit->name,
+            ],
+        ]);
+    }
+
+    // Unit page থেকে normal submit
+    return redirect()
+        ->route('units.index')
+        ->with('success', 'Unit created successfully.');
+
     }
 
     /**

@@ -8,7 +8,7 @@
 
                 <div>
                     <h5 class="modal-title" id="quickCreateModalTitle">
-                        Add Category
+                        Add Item
                     </h5>
 
                     <p class="quick-create-subtitle" id="quickCreateModalSubtitle">
@@ -58,7 +58,8 @@
 
                     </div>
 
-                    <div class="form-group mt-3">
+                    <div class="form-group mt-3"
+                         id="quickCreateDescriptionGroup">
 
                         <label for="quickCreateDescription" class="form-label">
                             Description
@@ -106,7 +107,7 @@
                         <i class="bi bi-check-lg"></i>
 
                         <span id="quickCreateSaveText">
-                            Save Category
+                            Save Item
                         </span>
 
                     </button>
