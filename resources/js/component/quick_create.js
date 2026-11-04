@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const mode = this.dataset.mode;
             alert(mode);
             const type = this.dataset.type;
-
+            alert(type);
             const item = config[type];
 
             if (!item) return;
@@ -282,16 +282,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
 
             }
-
-
+            showQuickCreateMessage(data.message);
             /*
             |--------------------------------------------------------------------------
             | Add / Update Select
             |--------------------------------------------------------------------------
             */
 
-            const createdItem =
-                data[item.response];
+            const createdItem =data[item.response];
 
 
             if (createdItem) {
@@ -401,4 +399,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    function showQuickCreateMessage(message, type = 'success') {
+
+    const toastElement = document.getElementById('quickCreateToast');
+    const toastMessage = document.getElementById('quickCreateToastMessage');
+    const toastIcon = document.getElementById('quickCreateToastIcon');
+
+    if (!toastElement) return;
+
+    toastMessage.textContent = message;
+
+    if (type === 'success') {
+        toastIcon.className = 'bi bi-check-circle-fill text-success me-2';
+    } else {
+        toastIcon.className = 'bi bi-x-circle-fill text-danger me-2';
+    }
+
+    const toast = bootstrap.Toast.getOrCreateInstance(toastElement, {
+        delay: 3000
+    });
+
+    toast.show();
+}
 });

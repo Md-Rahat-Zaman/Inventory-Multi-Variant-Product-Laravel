@@ -18,6 +18,7 @@
             </p>
         </div>
 
+        @if (auth()->user()->hasPermission('categories', 'create'))
         <div class="module-header-actions">
             <button type="button"
                     class="btn btn-primary module-btn quick-create-btn"
@@ -31,6 +32,7 @@
 
             </button>
         </div>
+        @endif
 
     </div>
 </div>
@@ -136,6 +138,7 @@
 
                                 <ul class="dropdown-menu module-action-menu">
 
+                                    @if (auth()->user()->hasPermission('categories', 'edit'))
                                     <li>
                                         <button type="button"
                                                 class="dropdown-item quick-create-btn"
@@ -150,7 +153,9 @@
 
                                         </button>
                                     </li>
+                                    @endif
 
+                                    @if (auth()->user()->hasPermission('categories', 'delete'))
                                     <li>
                                         <form action="{{ route('categories.destroy', $category) }}"
                                               method="POST"
@@ -167,6 +172,7 @@
 
                                         </form>
                                     </li>
+                                    @endif
 
                                 </ul>
 
@@ -195,6 +201,7 @@
                                     Start by creating your first category.
                                 </p>
 
+                                @if (auth()->user()->hasPermission('categories', 'create'))
                                 <button type="button"
                                         class="btn btn-primary module-btn quick-create-btn"
                                         data-bs-toggle="modal"
@@ -206,6 +213,7 @@
                                     Add Category
 
                                 </button>
+                                @endif
 
                             </div>
 

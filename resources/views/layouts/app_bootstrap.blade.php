@@ -39,10 +39,10 @@
     <link rel="stylesheet"
           href="{{ asset('build/assets/css/element/responsive.css') }}">
 
-    {{-- <link rel="stylesheet"
+    <link rel="stylesheet"
           href="{{ asset('build/assets/css/product/product-form.css') }}">  
     <link rel="stylesheet"
-          href="{{ asset('build/assets/css/product/product-list.css') }}">       --}}
+          href="{{ asset('build/assets/css/product/product-list.css') }}">      
 
      <link rel="stylesheet"
           href="{{ asset('build/assets/css/global/global_list.css') }}">
@@ -52,6 +52,7 @@
 
      <link rel="stylesheet"
           href="{{ asset('build/assets/css/component/advance_filter.css') }}">
+
 
 
     <script src="{{ asset('build/assets/js/dashboard.js') }}"></script>
@@ -93,7 +94,9 @@
     <!-- Dashboard JS -->
 
     {{-- <script src="{{ asset('assets/js/dashboard.js') }}"></script> --}}
+    @include('customers.partials.quick_create_modal')
 
+     @include('customers.partials.quick_create_script')
     @stack('scripts')
 
 </body>

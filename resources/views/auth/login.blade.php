@@ -12,16 +12,10 @@
     <title>Login | Inventory Management System</title>
 
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
           rel="stylesheet">
 
-  <link rel="stylesheet" href="{{ asset('build/assets/css/auth/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 
 </head>
 
@@ -254,7 +248,9 @@
                             <button
                                 type="button"
                                 class="password-toggle"
-                                onclick="togglePassword()">
+                                onclick="togglePassword()"
+                                aria-label="Show password"
+                                aria-pressed="false">
 
                                 <i class="bi bi-eye"
                                    id="passwordIcon"></i>
@@ -419,6 +415,8 @@ function togglePassword()
     const icon =
         document.getElementById('passwordIcon');
 
+    const toggle =
+        document.querySelector('.password-toggle');
 
     if (password.type === 'password') {
 
@@ -428,6 +426,10 @@ function togglePassword()
 
         icon.classList.add('bi-eye-slash');
 
+        toggle.setAttribute('aria-label', 'Hide password');
+
+        toggle.setAttribute('aria-pressed', 'true');
+
     } else {
 
         password.type = 'password';
@@ -435,6 +437,10 @@ function togglePassword()
         icon.classList.remove('bi-eye-slash');
 
         icon.classList.add('bi-eye');
+
+        toggle.setAttribute('aria-label', 'Show password');
+
+        toggle.setAttribute('aria-pressed', 'false');
 
     }
 }

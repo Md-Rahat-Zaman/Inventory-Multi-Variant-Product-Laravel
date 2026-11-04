@@ -12,7 +12,14 @@ class QuickCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $module = match ($this->input('type')) {
+            'category' => 'categories',
+            'brand' => 'brands',
+            'unit' => 'units',
+            default => null,
+        };
+
+        return $module !== null && $this->user()?->hasPermission($module, 'create') === true;
     }
 
     /**
@@ -22,9 +29,11 @@ class QuickCreateRequest extends FormRequest
      */
     public function rules(): array
     {
-         return [
+        return [
             'type' => ['required', 'in:category,brand,unit'],
             'name' => ['required', 'string', 'max:100'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'status' => ['required', 'boolean'],
         ];
     }
 }

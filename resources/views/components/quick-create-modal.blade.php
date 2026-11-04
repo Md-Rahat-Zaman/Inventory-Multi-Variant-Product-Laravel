@@ -29,12 +29,12 @@
 
                 @csrf
 
-                <input type="hidden"
+                <input type="text"
                        name="_method"
                        id="quickCreateMethod"
                        value="POST">
 
-                <input type="hidden"
+                <input type="text"
                        name="type"
                        id="quickCreateType">
 
@@ -120,4 +120,19 @@
 
     </div>
 
+</div>
+
+
+{{-- success alert --}}
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+    <div id="quickCreateToast" class="toast border-0 shadow-sm" role="alert">
+        <div class="d-flex align-items-center">
+            <div class="toast-body">
+                <i id="quickCreateToastIcon" class="bi bi-check-circle-fill text-success me-2"></i>
+                <span id="quickCreateToastMessage"></span>
+            </div>
+
+            <button type="button" class="btn-close me-3" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
 </div>

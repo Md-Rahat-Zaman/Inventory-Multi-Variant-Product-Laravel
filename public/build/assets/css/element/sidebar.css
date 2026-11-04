@@ -1,116 +1,71 @@
-/* ==========================================
-   Sidebar
-========================================== */
-
 .sidebar {
+    box-sizing: border-box;
     width: 260px;
     height: 100vh;
-
-    background-color: #1e293b;
-
-    color: #ffffff;
-
+    min-height: 100vh;
     position: fixed;
-    top: 0;
-    left: 0;
-
+    inset: 0 auto 0 0;
     overflow-y: auto;
-
-    transition: all 0.3s ease;
+    overscroll-behavior: contain;
+    color: #e2e8f0;
+    background: linear-gradient(180deg, #172033 0%, #111827 100%);
+    border-right: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 8px 0 24px rgba(15, 23, 42, 0.08);
+    transition: width 0.25s ease, transform 0.25s ease;
+    scrollbar-color: #475569 transparent;
+    scrollbar-width: thin;
 }
-
-/* ==========================================
-   Sidebar Title
-========================================== */
 
 .sidebar h4 {
-    font-size: 24px;
+    margin-bottom: 1.5rem;
+    padding: 0.35rem 0.5rem 1rem;
+    color: #f8fafc;
+    font-size: 1.2rem;
     font-weight: 700;
-
-    margin-bottom: 30px;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
 }
-
-/* ==========================================
-   Navigation
-========================================== */
 
 .sidebar .nav {
-    gap: 2px !important;
+    gap: 0.25rem !important;
 }
 
-/* ==========================================
-   Navigation Link
-========================================== */
+.sidebar .nav-item {
+    min-width: 0;
+}
 
 .sidebar .nav-link {
-
-    color: #d1d6d5 !important;
-
-    padding: 10px 16px; /* upore and niche 12px gap dane and bame 16 px */
-
-    border-radius: 8px;
-
-    transition: all 3s ease;
-}
-
-/* ==========================================
-   Hover
-========================================== */
-
-.sidebar .nav-link:hover {
-
-    background-color: #365533;
-
-    color: #ded8d8 !important;
-}
-
-/* ==========================================
-   Active Link
-========================================== */
-
-.sidebar .nav-link.active {
-
-    background-color: #2563eb;
-
-    color: #ffffff !important;
-}
-
-
-.sidebar {
-    background: #1e293b;
-    color: #ffffff;
-    min-height: 100vh;
-}
-
-.sidebar h4 {
-    color: #ffffff;
-    font-weight: 600;
-}
-
-/* Main menu */
-.sidebar .nav-link {
-    color: #cbd5e1;
     display: flex;
+    min-height: 44px;
     align-items: center;
-    padding: 10px 14px;
-    margin-bottom: 4px;
-    border-radius: 8px;
+    margin-bottom: 2px;
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.65rem;
+    color: #b8c4d6 !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.35;
     text-decoration: none;
-    transition: all 0.25s ease;
+    transition: color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .sidebar .nav-link:hover {
-    background: #334155;
-    color: #ffffff;
+    color: #fff !important;
+    background-color: rgba(148, 163, 184, 0.12);
 }
 
-/* Dashboard active */
-.sidebar > .nav > .nav-item > .nav-link.active {
-    background: #334155;
-    color: #ffffff;
+.sidebar .nav-link:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
 }
 
-/* Parent menu */
+.sidebar > .nav > .nav-item > .nav-link.active,
+.sidebar .sidebar-menu-toggle.active {
+    color: #fff !important;
+    background: linear-gradient(100deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.22);
+}
+
 .sidebar-menu {
     list-style: none;
 }
@@ -119,50 +74,71 @@
     cursor: pointer;
 }
 
-/* Arrow */
+.sidebar .bi {
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
 .menu-arrow {
     margin-left: auto;
-    font-size: 12px;
-    transition: transform 0.25s ease;
+    font-size: 0.75rem !important;
+    transition: transform 0.22s ease;
 }
 
-/* Submenu */
 .sidebar-submenu {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 5px 0;
-
     max-height: 0;
     overflow: hidden;
-
-    transition: max-height 0.3s ease;
+    margin: 0 0 0.35rem;
+    padding: 0;
+    list-style: none;
+    transition: max-height 0.28s ease;
 }
 
-/* Open submenu */
 .sidebar-menu.open > .sidebar-submenu {
-    max-height: 500px;
+    max-height: 1000px;
 }
 
-/* Rotate arrow */
 .sidebar-menu.open > .sidebar-menu-toggle .menu-arrow {
     transform: rotate(90deg);
 }
 
-/* Submenu links */
 .sidebar-submenu .nav-link {
-    font-size: 14px;
-    padding: 8px 12px 8px 38px;
-    margin-bottom: 2px;
-    color: #94a3b8;
+    position: relative;
+    min-height: 38px;
+    margin: 1px 0;
+    padding: 0.5rem 0.65rem 0.5rem 2.45rem;
+    color: #9eacc1 !important;
+    font-size: 0.85rem;
+    font-weight: 400;
 }
 
-/* Submenu hover */
-.sidebar-submenu .nav-link:hover {
-    background: #334155;
-    color: #ffffff;
+.sidebar-submenu .nav-link .bi {
+    font-size: 0.9rem;
 }
 
-/* Icons */
-.sidebar .bi {
-    flex-shrink: 0;
+.sidebar-submenu .nav-link.active {
+    color: #eff6ff !important;
+    background-color: rgba(59, 130, 246, 0.17);
+    font-weight: 600;
+}
+
+.sidebar-submenu .nav-link.active::before {
+    position: absolute;
+    top: 50%;
+    left: 1.05rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #60a5fa;
+    content: "";
+    transform: translateY(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sidebar,
+    .sidebar .nav-link,
+    .sidebar-submenu,
+    .menu-arrow {
+        transition: none;
+    }
 }

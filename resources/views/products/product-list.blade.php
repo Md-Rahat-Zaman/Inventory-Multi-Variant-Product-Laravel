@@ -153,6 +153,7 @@
                 </div>
 
 
+                @if (auth()->user()->hasPermission('products', 'create'))
                 <div class="module-header-actions">
 
                     <a href="{{ route('products.create') }}"
@@ -165,6 +166,7 @@
                     </a>
 
                 </div>
+                @endif
 
             </div>
 
@@ -223,10 +225,16 @@
 
             </div>
 
+            @include('partials.advanced_list_filter', [
+                'filterFields' => $filterFields,
+                'filters' => $filters,
+                'searchPlaceholder' => 'Product name, SKU, barcode, category...',
+            ])
 
             {{-- =================================================
                  Basic Toolbar
             ================================================== --}}
+            @if (false)
             <div class="module-toolbar">
 
 
@@ -597,6 +605,7 @@
             </div>
 
 
+            @endif
             {{-- =====================================================
                  Product Table
             ====================================================== --}}
@@ -741,6 +750,7 @@
 
                                         <ul class="dropdown-menu dropdown-menu-end module-action-menu">
                                            
+                                            @if (auth()->user()->hasPermission('products', 'edit'))
                                             <li>
                                                 <button
                                                     type="button"
@@ -772,7 +782,9 @@
                                                     Edit
                                                 </a>
                                             </li>
+                                            @endif
 
+                                            @if (auth()->user()->hasPermission('products', 'delete'))
                                             <li><hr class="dropdown-divider"></li>
 
                                             <li>
@@ -790,6 +802,7 @@
                                                     </button>
                                                 </form>
                                             </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </td>
@@ -811,11 +824,13 @@
                                             Start by adding your first product.
                                         </p>
 
+                                        @if (auth()->user()->hasPermission('products', 'create'))
                                         <a href="{{ route('products.create') }}"
                                         class="btn btn-primary module-btn">
                                             <i class="bi bi-plus-lg"></i>
                                             Add Product
                                         </a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

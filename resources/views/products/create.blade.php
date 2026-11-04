@@ -1,6 +1,6 @@
 @extends('layouts.app_bootstrap')
 
-@section('title', 'Create Product')
+@section('title', isset($product) ? 'Edit Product' : 'Create Product')
 
 @section('content')
 
@@ -14,8 +14,12 @@
 
         <div class="form-card-body">
 
-            <form method="POST" action="{{ route('products.store') }}">
-                @csrf
+            <form method="POST" action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}">
+            @csrf
+
+            @isset($product)
+                @method('PUT')
+            @endisset
 
                 @include('products.partials._basic-information')
 
@@ -26,9 +30,9 @@
                 @include('products.partials._additional-information')
 
                 @include('components.form.submit-buttons', [
-                    'backUrl' => route('products.index'),
-                    'buttonText' => 'Save Product'
-                ])
+                        'backUrl' => route('products.index'),
+                        'buttonText' => 'Save Product'
+                    ])
 
             </form>
 

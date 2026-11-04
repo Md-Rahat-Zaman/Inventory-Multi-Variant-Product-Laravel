@@ -31,7 +31,7 @@
                                 <input
                                     type="text"
                                     name="name"
-                                    value="{{ old('name') }}"
+                                    value="{{ old('name', $product->name ?? '') }}"
                                     class="form-control @error('name') is-invalid @enderror"
                                     placeholder="Enter product name"
                                     required
@@ -147,7 +147,8 @@
 
                                         <option
                                             value="{{ $category->id }}"
-                                            @selected(old('category_id') == $category->id)
+                                             @selected(old('category_id', $product->category_id ?? '') == $category->id)
+                                       
                                         >
                                             {{ $category->name }}
                                         </option>
@@ -185,13 +186,13 @@
                                         Select brand
                                     </option>
 
-                                    @foreach($brands ?? [] as $brand)
+                                    @foreach($brands ?? [] as $br)
 
                                         <option
-                                            value="{{ $brand->id }}"
-                                            @selected(old('brand_id') == $brand->id)
+                                            value="{{ $br->id }}"
+                                            @selected(old('brand_id', $product->brand_id ?? '') == $br->id)
                                         >
-                                            {{ $brand->name }}
+                                            {{ $br->name }}
                                         </option>
 
                                     @endforeach
@@ -218,7 +219,17 @@
                                     Unit
                                     <span class="text-danger">*</span>
                                 </label>
+                                <button type="button"
+                                            class="btn btn-sm btn-outline-primary quick-create-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#quickCreateModal"
+                                            data-type="unit"
+                                            data-mode="create">
 
+                                        <i class="bi bi-plus-lg"></i>
+                                        Add
+
+                                    </button>
                                 <select
                                     name="unit_id"
                                     class="form-select @error('unit_id') is-invalid @enderror"
@@ -233,7 +244,7 @@
 
                                         <option
                                             value="{{ $unit->id }}"
-                                            @selected(old('unit_id') == $unit->id)
+                                            @selected(old('unit_id', $product->unit_id ?? '') == $unit->id)
                                         >
                                             {{ $unit->name }}
                                         </option>

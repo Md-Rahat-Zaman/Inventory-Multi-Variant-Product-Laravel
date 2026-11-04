@@ -9,9 +9,9 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
-    <title>
-        {{ config('app.name', 'Inventory Management System') }}
-    </title>
+    <title>{{ config('app.name', 'Inventory Management System') }} | Smart Inventory Management</title>
+    <meta name="description"
+          content="Manage products, stock, sales, purchases and business reports in one organized inventory platform.">
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -22,8 +22,7 @@
           rel="stylesheet">
 
 
-    <link rel="stylesheet"
-          href="{{ asset('build/assets/css/element/welcome.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
 </head>
 
@@ -197,7 +196,7 @@
 
                         <i class="bi bi-circle-fill"></i>
 
-                        System Active
+                        Sample Preview
 
                     </div>
 
@@ -290,6 +289,10 @@
                     </div>
 
                 </div>
+
+                <p class="preview-caption">
+                    Example dashboard view. Figures are for illustration only.
+                </p>
 
             </div>
 

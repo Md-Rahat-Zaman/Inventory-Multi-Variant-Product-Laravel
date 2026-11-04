@@ -15,18 +15,23 @@ class QuickCreateController extends Controller
         $data = [
             'name' => $request->name,
             'slug' => Str::slug($request->name),
+            'status' => $request->boolean('status'),
         ];
 
         $model = match ($request->type) {
-            'category' => Category::create($data),
-            // 'brand'    => Brand::create($data),
-            // 'unit'     => Unit::create($data),
+            'category' => Category::create($data + ['description' => $request->description]),
+            'brand' => Brand::create($data),
+            'unit' => Unit::create($data),
         };
 
         return response()->json([
             'success' => true,
-            'message' => ucfirst($request->type) . ' created successfully.',
+            'message' => ucfirst($request->type).' created successfully.',
             'data' => [
+                'id' => $model->id,
+                'name' => $model->name,
+            ],
+            $request->type => [
                 'id' => $model->id,
                 'name' => $model->name,
             ],
