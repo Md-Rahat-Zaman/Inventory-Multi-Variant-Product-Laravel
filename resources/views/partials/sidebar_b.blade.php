@@ -1,7 +1,16 @@
 
 <div class="sidebar p-3">
 
-    <h4 class="text-center mb-4">Inventory</h4>
+    <div class="sidebar-brand mb-4">
+        @if ($shopSettings?->logo_path)
+            <img src="{{ asset('storage/'.$shopSettings->logo_path) }}"
+                 alt="{{ $shopSettings->shop_name }} logo"
+                 class="sidebar-brand-logo">
+        @else
+            <span class="sidebar-brand-icon"><i class="bi bi-boxes"></i></span>
+        @endif
+        <span class="sidebar-brand-name">{{ $shopSettings?->shop_name ?: config('app.name', 'Inventory System') }}</span>
+    </div>
 
     <ul class="nav flex-column">
 
@@ -427,9 +436,9 @@
 
 
         {{-- Settings --}}
-        <li class="nav-item sidebar-menu {{ request()->routeIs('profile.*', 'users.*') ? 'open' : '' }}">
+        <li class="nav-item sidebar-menu {{ request()->routeIs('profile.*', 'users.*', 'shop-settings.*') ? 'open' : '' }}">
 
-            <a href="#" class="nav-link sidebar-menu-toggle {{ request()->routeIs('profile.*', 'users.*') ? 'active' : '' }}">
+            <a href="#" class="nav-link sidebar-menu-toggle {{ request()->routeIs('profile.*', 'users.*', 'shop-settings.*') ? 'active' : '' }}">
                 <i class="bi bi-gear me-2"></i>
                 <span>Settings</span>
                 <i class="bi bi-chevron-right menu-arrow"></i>
@@ -437,12 +446,14 @@
 
             <ul class="sidebar-submenu">
 
+                @if (auth()->user()->isAdministrator())
                 <li>
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-building me-2"></i>
-                        Company Settings
+                    <a href="{{ route('shop-settings.edit') }}" class="nav-link {{ request()->routeIs('shop-settings.*') ? 'active' : '' }}">
+                        <i class="bi bi-shop me-2"></i>
+                        Shop Information
                     </a>
                 </li>
+                @endif
 
                 <li>
                     <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">

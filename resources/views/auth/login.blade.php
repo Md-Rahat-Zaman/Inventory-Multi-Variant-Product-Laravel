@@ -9,7 +9,11 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
-    <title>Login | Inventory Management System</title>
+    @php
+        $shopName = $shopSettings?->shop_name ?: config('app.name', 'Inventory System');
+        $shopTagline = $shopSettings?->tagline ?: 'MANAGEMENT PLATFORM';
+    @endphp
+    <title>Login | {{ $shopName }}</title>
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
@@ -38,21 +42,25 @@
 
             <div class="brand">
 
-                <div class="brand-icon">
-
-                    <i class="bi bi-boxes"></i>
-
-                </div>
+                @if ($shopSettings?->logo_path)
+                    <img src="{{ asset('storage/'.$shopSettings->logo_path) }}"
+                         alt="{{ $shopName }} logo"
+                         class="brand-logo">
+                @else
+                    <div class="brand-icon">
+                        <i class="bi bi-boxes"></i>
+                    </div>
+                @endif
 
 
                 <div>
 
                     <div class="brand-name">
-                        Inventory System
+                        {{ $shopName }}
                     </div>
 
                     <span class="brand-subtitle">
-                        MANAGEMENT PLATFORM
+                        {{ $shopTagline }}
                     </span>
 
                 </div>

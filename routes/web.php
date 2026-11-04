@@ -15,6 +15,7 @@ use App\Http\Controllers\QuickCreateController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\ShopSettingController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,11 @@ Route::get('/dashboard', DashboardController::class)
 
 Route::middleware(['auth', 'admin'])->resource('users', UserController::class)
     ->except(['show']);
+
+Route::middleware(['auth', 'admin'])->controller(ShopSettingController::class)->group(function () {
+    Route::get('/settings/shop', 'edit')->name('shop-settings.edit');
+    Route::put('/settings/shop', 'update')->name('shop-settings.update');
+});
 
 Route::middleware(['auth', 'module-access'])->group(function () {
 
